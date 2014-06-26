@@ -34,18 +34,27 @@ module.exports = function(grunt) {
 
     // Iterate over all src-dest file pairs.
     this.files.forEach(function(f) {
-      // Concat banner + specified files + footer.
-      var src = banner + f.src.filter(function(filepath) {
-        // Warn on and remove invalid source files (if nonull was set).
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
-          return false;
-        } else {
-          return true;
-        }
-      }).map(function(filepath) {
+
+      // filter file list to only valid files.
+      var filePaths = f.src.filter(function(filepath) {
+          // Warn on and remove invalid source files (if nonull was set).
+          if (!grunt.file.exists(filepath)) {
+              grunt.log.warn('Source file "' + filepath + '" not found.');
+              return false;
+          } else {
+              return true;
+          }
+      });
+
+      var fileContents = [];
+      var i = 0;
+
+      while(i < filePaths.length)
+      {
+        var filepath = filePaths[i++];
+
         if (grunt.file.isDir(filepath)) {
-          return;
+          continue;
         }
         // Read file source.
         var src = grunt.file.read(filepath);
@@ -59,11 +68,14 @@ module.exports = function(grunt) {
         if (options.stripBanners) {
           src = comment.stripBanner(src, options.stripBanners);
         }
-        return src;
-      }).join(options.separator) + footer;
+        fileContents.push(src);
+      }
+
+      // Concat banner + specified files + footer.
+      var fullSource = banner + fileContents.join(options.separator) + footer;
 
       // Write the destination file.
-      grunt.file.write(f.dest, src);
+      grunt.file.write(f.dest, fullSource);
 
       // Print a success message.
       grunt.log.writeln('File ' + chalk.cyan(f.dest) + ' created.');
