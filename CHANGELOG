@@ -2,7 +2,7 @@ v0.5.1:
   date: 2014-06-26
   changes:
     - Change all references to grunt-contrib-concat to grunt-contribut-concat-depends
-    - Add support for glob and dependency evaluation
+    - Add support dependency evaluation
 v0.4.0:
   date: 2014-03-21
   changes:

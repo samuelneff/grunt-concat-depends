@@ -263,7 +263,7 @@ grunt.initConfig({
 
 ## Release History
 
- * 2014-06-26   v0.5.1   Change all references to grunt-contrib-concat to grunt-contribut-concat-depends Add support for glob and dependency evaluation
+ * 2014-06-26   v0.5.1   Change all references to grunt-contrib-concat to grunt-contribut-concat-depends and add support dependency evaluation
  * 2014-03-21   v0.4.0   README updates. Output updates.
  * 2013-04-25   v0.3.0   Add option to process files with a custom function.
  * 2013-04-08   v0.2.0   Don't normalize separator to allow user to set LF even on a Windows environment.
@@ -275,7 +275,3 @@ grunt.initConfig({
  * 2012-10-03   v0.1.0   Work in progress, not yet officially released.
 
 ---
-
-Task submitted by ["Cowboy" Ben Alman](http://benalman.com/)
-
-*This file was generated on Thu Jun 26 2014 15:08:09.*
