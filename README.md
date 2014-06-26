@@ -1,4 +1,4 @@
-# grunt-contrib-concat-depends v0.5.1 [![Build Status: Linux](https://travis-ci.org/samuelneff/grunt-contrib-concat-depends.png?branch=master)](https://travis-ci.org/samuelneff/grunt-contrib-concat-depends) <a href="https://ci.appveyor.com/project/gruntjs/grunt-contrib-concat-depends"><img src="[object Object]" alt="Build Status: Windows" height="18" /></a>
+# grunt-contrib-depends v0.5.1 [![Build Status: Linux](https://travis-ci.org/samuelneff/grunt-contrib-depends.png?branch=master)](https://travis-ci.org/samuelneff/grunt-contrib-depends) <a href="https://ci.appveyor.com/project/gruntjs/grunt-contrib-depends"><img src="[object Object]" alt="Build Status: Windows" height="18" /></a>
 
 > Concatenate files with dependency order resolution..
 
@@ -10,13 +10,13 @@ This plugin requires Grunt `~0.4.0`
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
 ```shell
-npm install grunt-contrib-concat-depends --save-dev
+npm install grunt-contrib-depends --save-dev
 ```
 
 Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('grunt-contrib-concat-depends');
+grunt.loadNpmTasks('grunt-contrib-depends');
 ```
 
 

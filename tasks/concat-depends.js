@@ -1,6 +1,6 @@
 /*
- * grunt-contrib-concat-depends
- * https://github.com/samuelneff/grunt-contrib-concat-depends
+ * grunt-contrib-depends
+ * https://github.com/samuelneff/grunt-contrib-depends
  *
  * Copyright (c) 2014 Samuel Neff
  *
