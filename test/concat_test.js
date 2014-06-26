@@ -7,7 +7,7 @@ function getNormalizedFile(filepath) {
   return grunt.util.normalizelf(grunt.file.read(filepath));
 }
 
-exports.concat = {
+exports['concat-depends'] = {
   default_options: function(test) {
     test.expect(1);
 

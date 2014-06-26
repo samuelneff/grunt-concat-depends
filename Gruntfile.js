@@ -1,8 +1,9 @@
 /*
- * grunt-contrib-concat
- * http://gruntjs.com/
+ * grunt-contrib-concat-depends
+ * https://github.com/samuelneff/grunt-contrib-concat-depends
  *
- * Copyright (c) 2014 "Cowboy" Ben Alman, contributors
+ * Copyright (c) 2014 Samuel Neff
+ * based on grunt-contrib-concat Copyright (c) 2014 "Cowboy" Ben Alman, contributors
  * Licensed under the MIT license.
  */
 
@@ -30,7 +31,7 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     banner_property: 'AWESOME',
-    concat: {
+    "concat-depends": {
       default_options: {
         files: {
           'tmp/default_options': ['test/fixtures/file1', 'test/fixtures/file2']
@@ -49,7 +50,7 @@ module.exports = function(grunt) {
       handling_invalid_files: {
         src: ['test/fixtures/file1', 'invalid_file/should_warn/but_not_fail', 'test/fixtures/file2'],
         dest: 'tmp/handling_invalid_files',
-        nonull: true,
+        nonull: true
       },
       process_function: {
         options: {
@@ -77,7 +78,7 @@ module.exports = function(grunt) {
         files: {
           'tmp/overwrite': ['test/fixtures/banner2.js']
         }
-      },
+      }
     },
 
     // Unit tests.
@@ -98,7 +99,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'concat', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'concat-depends', 'nodeunit']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test', 'build-contrib']);

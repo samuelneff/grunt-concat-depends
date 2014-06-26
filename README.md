@@ -1,6 +1,6 @@
-# grunt-contrib-concat v0.5.0-pre [![Build Status: Linux](https://travis-ci.org/gruntjs/grunt-contrib-concat.png?branch=master)](https://travis-ci.org/gruntjs/grunt-contrib-concat) <a href="https://ci.appveyor.com/project/gruntjs/grunt-contrib-concat"><img src="https://ci.appveyor.com/api/projects/status/43qbw6jsp3rb2rh6/branch/master" alt="Build Status: Windows" height="18" /></a>
+# grunt-contrib-concat-depends v0.5.1 [![Build Status: Linux](https://travis-ci.org/samuelneff/grunt-contrib-concat-depends.png?branch=master)](https://travis-ci.org/samuelneff/grunt-contrib-concat-depends) <a href="https://ci.appveyor.com/project/gruntjs/grunt-contrib-concat-depends"><img src="[object Object]" alt="Build Status: Windows" height="18" /></a>
 
-> Concatenate files.
+> Concatenate files with dependency order resolution..
 
 
 
@@ -10,13 +10,13 @@ This plugin requires Grunt `~0.4.0`
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
 ```shell
-npm install grunt-contrib-concat --save-dev
+npm install grunt-contrib-concat-depends --save-dev
 ```
 
 Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('grunt-contrib-concat');
+grunt.loadNpmTasks('grunt-contrib-concat-depends');
 ```
 
 
@@ -263,6 +263,7 @@ grunt.initConfig({
 
 ## Release History
 
+ * 2014-06-26   v0.5.1   Change all references to grunt-contrib-concat to grunt-contribut-concat-depends Add support for glob and dependency evaluation
  * 2014-03-21   v0.4.0   README updates. Output updates.
  * 2013-04-25   v0.3.0   Add option to process files with a custom function.
  * 2013-04-08   v0.2.0   Don't normalize separator to allow user to set LF even on a Windows environment.
@@ -277,4 +278,4 @@ grunt.initConfig({
 
 Task submitted by ["Cowboy" Ben Alman](http://benalman.com/)
 
-*This file was generated on Fri Jun 13 2014 23:50:42.*
+*This file was generated on Thu Jun 26 2014 15:08:09.*

@@ -1,23 +1,23 @@
 {
-  "name": "grunt-contrib-concat",
-  "description": "Concatenate files.",
-  "version": "0.5.0-pre",
-  "homepage": "https://github.com/gruntjs/grunt-contrib-concat",
+  "name": "grunt-contrib-concat-depends",
+  "description": "Concatenate files with dependency order resolution..",
+  "version": "0.5.1",
+  "homepage": "https://github.com/samuelneff/grunt-contrib-concat-depends",
   "author": {
-    "name": "Grunt Team",
-    "url": "http://gruntjs.com/"
+    "name": "Samuel Neff",
+    "url": "https://github.com/samuelneff"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/gruntjs/grunt-contrib-concat.git"
+    "url": "git://github.com/samuelneff/grunt-contrib-concat-depends.git"
   },
   "bugs": {
-    "url": "https://github.com/gruntjs/grunt-contrib-concat/issues"
+    "url": "https://github.com/samuelneff/grunt-contrib-concat-depends/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/gruntjs/grunt-contrib-concat/blob/master/LICENSE-MIT"
+      "url": "https://github.com/samuelneff/grunt-contrib-concat-depends/blob/master/LICENSE-MIT"
     }
   ],
   "engines": {
@@ -27,7 +27,8 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "chalk": "~0.4.0"
+    "chalk": "~0.4.0",
+    "glob": "~4.0.2"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.10.0",
@@ -40,7 +41,7 @@
     "grunt": "~0.4.0"
   },
   "keywords": [
-    "gruntplugin"
+    "gruntplugin", "dependencies", "order", "concat", "combine"
   ],
   "files": [
     "tasks",
