@@ -48,9 +48,9 @@ Note that only dependency order is guaranteed. As dependencies are processed, th
 
 Dependency resolution is always based on file name only. Paths specified should be only the file name, not the full or relative path.
 
-If a dependency is not in the set of files to be included, then the task will fail. If `force` option was specified when running grunt, the task will continue to concatenate all of the files but the order is not guaranteed.
+If a dependency is not in the set of files to be included the task will fail. If `force` option was specified when running grunt, the task will continue to concatenate all of the files but the order is not guaranteed.
 
-If a circular dependency is define then the task will fail. If `force` option was specified when running grunt, the task will continue to concatenate all of the files but the order is not guaranteed.
+If a circular dependency is defined the task will fail. If `force` option was specified when running grunt, the task will continue to concatenate all of the files but the order is not guaranteed.
 
 ### Options
 
