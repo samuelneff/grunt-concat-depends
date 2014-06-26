@@ -108,5 +108,23 @@ exports['concat-depends'] = {
     test.equal(actual, expected, 'Dependency push 3 after 5 and then 4 after 3, then 3 after 4 again');
 
     test.done();
+  },
+  glob_3_4_5: function(test) {
+    test.expect(1);
+
+    var actual = getNormalizedFile('tmp/glob_3_4_5');
+    var expected = getNormalizedFile('test/expected/glob_3_4_5');
+    test.equal(actual, expected, 'In order from wildcard');
+
+    test.done();
+  },
+  nested_3_4_5: function(test) {
+    test.expect(1);
+
+    var actual = getNormalizedFile('tmp/nested_3_4_5');
+    var expected = getNormalizedFile('test/expected/nested_3_4_5');
+    test.equal(actual, expected, 'In order from wildcard with nested directories');
+
+    test.done();
   }
 };
