@@ -1,0 +1,6 @@
+file3
+/// <depends path='file3' />
+file4
+/// <depends path='file3' />
+/// <depends path='file4' />
+file5

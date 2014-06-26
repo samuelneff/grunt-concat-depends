@@ -1,0 +1,3 @@
+/// <depends path='file4' />
+/// <depends path='file5' />
+file3

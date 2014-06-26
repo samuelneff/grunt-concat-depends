@@ -23,7 +23,7 @@ module.exports = function(grunt) {
   function dependenciesProcessed(src, filepath, filePaths, processedFiles, allFiles)
   {
     // check for dependencies
-    var dependsRegex = new RegExp('\\/\\/\\/\\s*<depends\\s+=[\'"]([^\'"]+)[\'"]', 'g');
+    var dependsRegex = new RegExp('\\/\\/\\/\\s*<depends?\\s+path\\s*=\\s*[\'"]([^\'"]+)[\'"]', 'g');
     var depends;
     while ( (depends = dependsRegex.exec(src)) != null)
     {
