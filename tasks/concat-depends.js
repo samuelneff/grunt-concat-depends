@@ -122,9 +122,9 @@ module.exports = function(grunt) {
       }
       catch(e)
       {
-        grunt.warn("Unable to resolve dependencies: " + e.toString());
+        grunt.log.warn("Unable to resolve dependencies: " + e.toString());
         // if force, then we're continuing regardless of dependency order
-        sortedFileNames = Object.keys(filesHash);
+        sortedFileNames = topsort(edges, {continueOnCircularDependency: true});
       }
 
       sortedFileNames.forEach(function(filename) {

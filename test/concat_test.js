@@ -153,5 +153,15 @@ exports['concat-depends'] = {
     test.equal(actual, expected, 'Dependency push 3 after 5 and then 4 after 3, then 3 after 4 again');
 
     test.done();
+  },
+  circular: function(test) {
+    test.expect(3);
+
+    var actual = getNormalizedFile('tmp/depends_5_4_3');
+    test.ok(actual.match(/file3/) != null);
+    test.ok(actual.match(/file4/) != null);
+    test.ok(actual.match(/file5/) != null);
+
+    test.done();
   }
 };

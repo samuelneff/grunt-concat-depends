@@ -118,6 +118,11 @@ module.exports = function(grunt) {
         files: {
           'tmp/depends_5_4_3': ['test/fixtures/depends_5_4_3/*']
         }
+      },
+      circular: {
+        files: {
+          'tmp/circular': ['test/fixtures/circular/*']
+        }
       }
     },
 
