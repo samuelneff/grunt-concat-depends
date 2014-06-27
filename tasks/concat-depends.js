@@ -17,40 +17,72 @@ module.exports = function(grunt) {
 
   // Internal lib.
   var comment = require('./lib/comment').init(grunt);
+  var topsort = require('topsort');
   var chalk = require('chalk');
   var path = require('path');
 
-  function dependenciesProcessed(src, filepath, filePaths, processedFiles, allFiles)
-  {
-    // check for dependencies
-    var dependsRegex = new RegExp('\\/\\/\\/\\s*<depends?\\s+path\\s*=\\s*[\'"]([^\'"]+)[\'"]', 'g');
-    var depends;
-    while ( (depends = dependsRegex.exec(src)) != null)
-    {
-      // first capture is the dependency name
-      var dependName = depends[1];
-      // if we haven't processed it yet, delay processing this file till the end..
-      if (!processedFiles[dependName])
-      {
-        // make sure dependency actually exists in files we're processing
-        if (!allFiles[dependName])
-        {
-          grunt.fail.warn(
-              'Missing dependency. \'' +filepath +
-              '\' depends on \'' + dependName +
-              '\' but the dependency was not included in the concatenation list.',
-            grunt.fail.code.TASK_FAILURE);
+  function filterFilesOnly(filepath) {
+    // Warn on and remove invalid source files (if nonull was set).
+    if (!grunt.file.exists(filepath)) {
+      grunt.log.warn('Source file "' + filepath + '" not found.');
+      return false;
+    } else if (grunt.file.isDir(filepath)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
-          // if we're running with force, ignore the dependency error and concat anyways
-          return true;
-        }
-        // we have not yet processed a dependency, move this file to the end..
-        filePaths.push(filepath);
-        return false;
-      }
+  function getDependencies(src)
+  {
+    var dependencies = [];
+    var dependsRegex = new RegExp('\\/\\/\\/\\s*<depends?\\s+path\\s*=\\s*[\'"]([^\'"]+)[\'"]', 'g');
+    var dependsMatch;
+
+    while ( (dependsMatch = dependsRegex.exec(src)) != null)
+    {
+      dependencies.push(dependsMatch[1]);
     }
 
-    return true;
+    return dependencies;
+  }
+
+  function getFileContentsAndDependenciesHash(filePaths)
+  {
+    var allFiles = {};
+
+    filePaths.forEach(function(filepath) {
+      var filename = path.basename(filepath);
+      var src = grunt.file.read(filepath);
+      allFiles[filename] =
+      {
+        filepath: filepath,
+        filename: filename,
+        src: src,
+        dependencies: getDependencies(src)
+      };
+    });
+
+    return allFiles;
+  }
+
+  function getFileDependencyEdges(files)
+  {
+    var edges = [];
+
+    Object.keys(files).forEach(function(filename) {
+
+      // make sure everything is included even if it has no dependencies and nothing depends on it
+      edges.push([filename]);
+
+      // now loop through dependencies and specify that they must come first
+      files[filename].dependencies.forEach(
+        function(dependencyName) {
+        edges.push([dependencyName, filename]);
+      });
+    });
+
+    return edges;
   }
 
   grunt.registerMultiTask('concat-depends', 'Concatenate files with globbing and dependency order resolution.', function() {
@@ -71,48 +103,38 @@ module.exports = function(grunt) {
     var banner = grunt.template.process(options.banner);
     var footer = grunt.template.process(options.footer);
 
+    // maintain a cache of files so if we push a file to end due to dependencies, we don' thave to re-read it from disk
+    var srcCache = {};
+
     // Iterate over all src-dest file pairs.
     this.files.forEach(function(f) {
 
       // filter file list to only valid files.
-      var filePaths = f.src.filter(function(filepath) {
-          // Warn on and remove invalid source files (if nonull was set).
-          if (!grunt.file.exists(filepath)) {
-              grunt.log.warn('Source file "' + filepath + '" not found.');
-              return false;
-          } else {
-              return true;
-          }
-      });
-
-      var allFiles = {};
-      filePaths.forEach(function(filepath) {
-        allFiles[path.basename(filepath)] = true;
-      });
+      var filePaths = f.src.filter(filterFilesOnly);
+      var filesHash = getFileContentsAndDependenciesHash(filePaths);
+      var edges = getFileDependencyEdges(filesHash);
+      var sortedFileNames;
       var fileContents = [];
-      var processedFiles = {};
-      var i = 0;
-      while(i < filePaths.length)
+
+      try
       {
-        var filepath = filePaths[i++];
-        var filename = path.basename(filepath);
+        sortedFileNames = topsort(edges);
+      }
+      catch(e)
+      {
+        grunt.warn("Unable to resolve dependencies: " + e.toString());
+        // if force, then we're continuing regardless of dependency order
+        sortedFileNames = Object.keys(filesHash);
+      }
 
-        if (grunt.file.isDir(filepath)) {
-          continue;
-        }
-        // Read file source.
-        var src = grunt.file.read(filepath);
+      sortedFileNames.forEach(function(filename) {
 
-        // ensure dependencies have been processed
-        if (!dependenciesProcessed(src, filepath, filePaths, processedFiles, allFiles))
-        {
-          // if dependencies were not processed, this file was pushed to the end again,
-          // so we can continue and will come back to it
-          continue;
-        }
+        var fileHash = filesHash[filename];
+        var src = fileHash.src;
+
         // Process files as templates if requested.
         if (typeof options.process === 'function') {
-          src = options.process(src, filepath);
+          src = options.process(src, fileHash.filepath);
         } else if (options.process) {
           src = grunt.template.process(src, options.process);
         }
@@ -120,9 +142,9 @@ module.exports = function(grunt) {
         if (options.stripBanners) {
           src = comment.stripBanner(src, options.stripBanners);
         }
-        processedFiles[filename] = true;
         fileContents.push(src);
-      }
+
+      });
 
       // Concat banner + specified files + footer.
       var fullSource = banner + fileContents.join(options.separator) + footer;

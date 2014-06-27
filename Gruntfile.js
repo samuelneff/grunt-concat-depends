@@ -103,6 +103,21 @@ module.exports = function(grunt) {
         files: {
           'tmp/nested_3_4_5': ['test/fixtures/nested_3_4_5/**/*']
         }
+      },
+      depends_glob_3_4_5: {
+        files: {
+          'tmp/depends_3_4_5': ['test/fixtures/depends_3_4_5/*']
+        }
+      },
+      depends_glob_4_5_3: {
+        files: {
+          'tmp/depends_4_5_3': ['test/fixtures/depends_4_5_3/*']
+        }
+      },
+      depends_glob_5_4_3: {
+        files: {
+          'tmp/depends_5_4_3': ['test/fixtures/depends_5_4_3/*']
+        }
       }
     },
 
