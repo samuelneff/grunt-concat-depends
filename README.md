@@ -1,12 +1,10 @@
-# grunt-concat-depends v0.5.1 [![Build Status: Linux](https://travis-ci.org/samuelneff/grunt-concat-depends.png?branch=master)](https://travis-ci.org/samuelneff/grunt-concat-depends)
+# grunt-concat-depends v0.5.1 [![Build Status: Linux](https://travis-ci.org/samuelneff/grunt-concat-depends.png?branch=master)](https://travis-ci.org/samuelneff/grunt-concat-depends) <a href="https://ci.appveyor.com/project/gruntjs/grunt-concat-depends"><img src="[object Object]" alt="Build Status: Windows" height="18" /></a>
 
 > Concatenate files with dependency order resolution.
 
 
 
 ## Getting Started
-This plugin is a fork of [grunt-contrib-concat](https://github.com/gruntjs/grunt-contrib-concat) and adds a dependency resolution mechanism to reorder files such that dependencies are processed first. Dependencies must be specified in the files themselves--there is no automatic dependency identification.
-
 This plugin requires Grunt `~0.4.0`
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
@@ -24,33 +22,10 @@ grunt.loadNpmTasks('grunt-concat-depends');
 
 
 
-## Concat-Depends task
-_Run this task with the `grunt concat-depends` command._
+## Concat task
+_Run this task with the `grunt concat` command._
 
 Task targets, files and options may be specified according to the Grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide.
-
-### Specifying dependencies
-
-Dependencies must be specified in the files to be concatenated. This is accomplished with the following syntax:
-
-```js
-/// <depends path='otherFile.js' />
-```
-
-A file with this line in it, anywhere in the file, will always be concatenated after `otherFile.js`.  Note that multiple dependencies are supported.
-
-```js
-/// <depends path='otherFile.js' />
-/// <depends path='anotherFile.js' />
-```
-
-Note that only dependency order is guaranteed. As dependencies are processed, the order of non-dependent files is not guaranteed. For example, given three files `file1`, `file2`, and `file3`, and specifying that `file1` has a dependency on `file2`, then when concatenated `file2` will definitely come before `file1`, but `file3` may come anywhere in the list as it is not dependent on any other file and no other file is dependent on it.
-
-Dependency resolution is always based on file name only. Paths specified should be only the file name, not the full or relative path.
-
-If a dependency is not in the set of files to be included the task will fail. If `force` option was specified when running grunt, the task will continue to concatenate all of the files but the order is not guaranteed.
-
-If a circular dependency is defined the task will fail. If `force` option was specified when running grunt, the task will continue to concatenate all of the files but the order is not guaranteed.
 
 ### Options
 
@@ -288,6 +263,19 @@ grunt.initConfig({
 
 ## Release History
 
- * 2014-06-26   v0.5.1   Fork and change all references from grunt-contrib-concat to grunt-concat-depends and add support for dependency evaluation
+ * 2014-06-26   v0.5.1   Change all references to grunt-contrib-concat to grunt-contribut-concat-depends Add support dependency evaluation
+ * 2014-03-21   v0.4.0   README updates. Output updates.
+ * 2013-04-25   v0.3.0   Add option to process files with a custom function.
+ * 2013-04-08   v0.2.0   Don't normalize separator to allow user to set LF even on a Windows environment.
+ * 2013-02-22   v0.1.3   Support footer option.
+ * 2013-02-15   v0.1.2   First official release for Grunt 0.4.0.
+ * 2013-01-18   v0.1.2rc6   Updating grunt/gruntplugin dependencies to rc6. Changing in-development grunt/gruntplugin dependency versions from tilde version ranges to specific versions.
+ * 2013-01-09   v0.1.2rc5   Updating to work with grunt v0.4.0rc5. Switching back to this.files api.
+ * 2012-11-13   v0.1.1   Switch to this.file api internally.
+ * 2012-10-03   v0.1.0   Work in progress, not yet officially released.
 
 ---
+
+Task submitted by ["Cowboy" Ben Alman](http://benalman.com/)
+
+*This file was generated on Mon Aug 18 2014 16:16:32.*

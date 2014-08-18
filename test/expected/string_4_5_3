@@ -1,0 +1,6 @@
+file4
+'depends file4';
+file5
+'depends file4';
+'depends file5';
+file3

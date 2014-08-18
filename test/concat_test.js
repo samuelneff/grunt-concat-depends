@@ -163,5 +163,14 @@ exports['concat-depends'] = {
     test.ok(actual.match(/file5/) != null);
 
     test.done();
+  },
+  string_4_5_3: function(test) {
+    test.expect(1);
+
+    var actual = getNormalizedFile('tmp/string_4_5_3');
+    var expected = getNormalizedFile('test/expected/string_4_5_3');
+    test.equal(actual, expected, 'In order dependencies shoudn\'t change order.');
+
+    test.done();
   }
 };

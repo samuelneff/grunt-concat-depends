@@ -123,6 +123,11 @@ module.exports = function(grunt) {
         files: {
           'tmp/circular': ['test/fixtures/circular/*']
         }
+      },
+      string_4_5_3: {
+        files: {
+          'tmp/string_4_5_3': ['test/fixtures/string_4_5_3/file3', 'test/fixtures/string_4_5_3/file4', 'test/fixtures/string_4_5_3/file5']
+        }
       }
     },
 

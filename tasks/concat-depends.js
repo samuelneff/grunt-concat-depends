@@ -36,7 +36,7 @@ module.exports = function(grunt) {
   function getDependencies(src)
   {
     var dependencies = [];
-    var dependsRegex = new RegExp('\\/\\/\\/\\s*<depends?\\s+path\\s*=\\s*[\'"]([^\'"]+)[\'"]', 'g');
+    var dependsRegex = new RegExp('(?:^|\\r?\\n)(?:\\/\\/\\/\\s*<|\')depends?\\s+(?:path\\s*=\\s*[\'"])?([^\'"]+)[\'"]', 'g');
     var dependsMatch;
 
     while ( (dependsMatch = dependsRegex.exec(src)) != null)
