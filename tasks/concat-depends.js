@@ -54,6 +54,18 @@ module.exports = function(grunt) {
     filePaths.forEach(function(filepath) {
       var filename = path.basename(filepath);
       var src = grunt.file.read(filepath);
+
+      //var duplicateName = allFiles[filename];
+      //if (duplicateName) {
+      //  if (duplicateName.filepath === filepath) {
+      //    // something really weird happened, same file processed twice
+      //    return;
+      //  }
+      //  duplicateName.src += '\n' + src;
+      //  duplicateName.dependencies = duplicateName.dependencies.concat(getDependencies(src));
+      //  return;
+      //}
+
       allFiles[filename] =
       {
         filepath: filepath,
@@ -103,7 +115,7 @@ module.exports = function(grunt) {
     var banner = grunt.template.process(options.banner);
     var footer = grunt.template.process(options.footer);
 
-    // maintain a cache of files so if we push a file to end due to dependencies, we don' thave to re-read it from disk
+    // maintain a cache of files so if we push a file to end due to dependencies, we don't have to re-read it from disk
     var srcCache = {};
 
     // Iterate over all src-dest file pairs.
@@ -127,6 +139,16 @@ module.exports = function(grunt) {
         sortedFileNames = topsort(edges, {continueOnCircularDependency: true});
       }
 
+      if (Array.isArray(options.priority)) {
+        var priority = {};
+        options.priority.forEach(function(filename) {
+          priority[filename] = true;
+        });
+
+        var priorityNames = sortedFileNames.filter(function(filename) { return priority[filename]; });
+        sortedFileNames = priorityNames.concat(sortedFileNames.filter(function(filename) { return !priority[filename]; }));
+      }
+
       sortedFileNames.forEach(function(filename) {
 
         var fileHash = filesHash[filename];
@@ -142,6 +164,8 @@ module.exports = function(grunt) {
         if (options.stripBanners) {
           src = comment.stripBanner(src, options.stripBanners);
         }
+
+        console.log('pushing ' + filename);
         fileContents.push(src);
 
       });

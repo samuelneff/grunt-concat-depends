@@ -37,6 +37,16 @@ module.exports = function(grunt) {
           'tmp/default_options': ['test/fixtures/file1', 'test/fixtures/file2']
         }
       },
+      private: {
+        options: {
+          process: function privatePricessSource(src, filepath) {
+            return '\n//\n//\n//\n//  START ' + filepath + '\n//\n//\n//\n\n' + src;
+          },
+          priority: [ 'typescript-client-server-compat.js' ]
+        },
+        src: require('./_private'),
+        dest: 'tmp/private.js'
+      },
       custom_options: {
         options: {
           separator: '\n;\n',

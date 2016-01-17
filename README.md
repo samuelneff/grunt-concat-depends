@@ -1,4 +1,4 @@
-# grunt-concat-depends v0.5.1 [![Build Status: Linux](https://travis-ci.org/samuelneff/grunt-concat-depends.png?branch=master)](https://travis-ci.org/samuelneff/grunt-concat-depends) <a href="https://ci.appveyor.com/project/gruntjs/grunt-concat-depends"><img src="[object Object]" alt="Build Status: Windows" height="18" /></a>
+# grunt-concat-depends v0.7.0 [![Build Status: Linux](https://travis-ci.org/samuelneff/grunt-concat-depends.svg?branch=master)](https://travis-ci.org/samuelneff/grunt-concat-depends)
 
 > Concatenate files with dependency order resolution.
 
@@ -263,6 +263,7 @@ grunt.initConfig({
 
 ## Release History
 
+ * 2016-01-17   v0.7.1   Fix issues with files with same name in different directories Add 'priority' option to put certain files on top regardless of dependencies
  * 2014-06-26   v0.5.1   Change all references to grunt-contrib-concat to grunt-contribut-concat-depends Add support dependency evaluation
  * 2014-03-21   v0.4.0   README updates. Output updates.
  * 2013-04-25   v0.3.0   Add option to process files with a custom function.
@@ -276,6 +277,6 @@ grunt.initConfig({
 
 ---
 
-Task submitted by ["Cowboy" Ben Alman](http://benalman.com/)
+Task submitted by [Samuel Neff](https://github.com/samuelneff)
 
-*This file was generated on Mon Aug 18 2014 16:16:32.*
+*This file was generated on Sun Jan 17 2016 12:54:43.*
