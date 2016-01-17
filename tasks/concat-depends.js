@@ -165,7 +165,6 @@ module.exports = function(grunt) {
           src = comment.stripBanner(src, options.stripBanners);
         }
 
-        console.log('pushing ' + filename);
         fileContents.push(src);
 
       });
