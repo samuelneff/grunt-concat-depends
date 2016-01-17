@@ -55,16 +55,16 @@ module.exports = function(grunt) {
       var filename = path.basename(filepath);
       var src = grunt.file.read(filepath);
 
-      //var duplicateName = allFiles[filename];
-      //if (duplicateName) {
-      //  if (duplicateName.filepath === filepath) {
-      //    // something really weird happened, same file processed twice
-      //    return;
-      //  }
-      //  duplicateName.src += '\n' + src;
-      //  duplicateName.dependencies = duplicateName.dependencies.concat(getDependencies(src));
-      //  return;
-      //}
+      var duplicateName = allFiles[filename];
+      if (duplicateName) {
+        if (duplicateName.filepath === filepath) {
+          // something really weird happened, same file processed twice
+          return;
+        }
+        duplicateName.src += '\n' + src;
+        duplicateName.dependencies = duplicateName.dependencies.concat(getDependencies(src));
+        return;
+      }
 
       allFiles[filename] =
       {

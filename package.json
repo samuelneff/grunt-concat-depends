@@ -1,7 +1,7 @@
 {
   "name": "grunt-concat-depends",
   "description": "Concatenate files with dependency order resolution.",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "homepage": "https://github.com/samuelneff/grunt-concat-depends",
   "author": {
     "name": "Samuel Neff",
