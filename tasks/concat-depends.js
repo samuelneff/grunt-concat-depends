@@ -26,25 +26,27 @@ module.exports = function(grunt) {
     if (!grunt.file.exists(filepath)) {
       grunt.log.warn('Source file "' + filepath + '" not found.');
       return false;
-    } else if (grunt.file.isDir(filepath)) {
-      return false;
-    } else {
-      return true;
     }
+
+    return !grunt.file.isDir(filepath);
   }
 
   function getDependencies(src)
   {
-    var dependencies = [];
-    var dependsRegex = new RegExp('(?:^|\\r?\\n)(?:\\/\\/\\/\\s*<|\')depends?\\s+(?:path\\s*=\\s*[\'"])?([^\'"]+)[\'"]', 'g');
-    var dependsMatch;
+    try {
+        var dependencies = [];
+        var dependsRegex = new RegExp('(?:^|\\r?\\n)(?:\\/\\/\\/\\s*<|\')depends?\\s+(?:path\\s*=\\s*[\'"])?([^\'"]+)[\'"]', 'g');
+        var dependsMatch;
 
-    while ( (dependsMatch = dependsRegex.exec(src)) != null)
-    {
-      dependencies.push(dependsMatch[1]);
+        while ((dependsMatch = dependsRegex.exec(src)) != null) {
+            dependencies.push(dependsMatch[1]);
+        }
+
+        return dependencies;
     }
-
-    return dependencies;
+    catch(err) {
+      throw new Error('Error getting dependencies for ' + src + ':\n' + err);
+    }
   }
 
   function getFileContentsAndDependenciesHash(filePaths)
@@ -52,27 +54,31 @@ module.exports = function(grunt) {
     var allFiles = {};
 
     filePaths.forEach(function(filepath) {
-      var filename = path.basename(filepath);
-      var src = grunt.file.read(filepath);
+      try {
+          var filename = path.basename(filepath);
+          var src = grunt.file.read(filepath);
 
-      var duplicateName = allFiles[filename];
-      if (duplicateName) {
-        if (duplicateName.filepath === filepath) {
-          // something really weird happened, same file processed twice
-          return;
-        }
-        duplicateName.src += '\n' + src;
-        duplicateName.dependencies = duplicateName.dependencies.concat(getDependencies(src));
-        return;
+          var duplicateName = allFiles[filename];
+          if (duplicateName) {
+              if (duplicateName.filepath === filepath) {
+                  // something really weird happened, same file processed twice
+                  return;
+              }
+              duplicateName.src += '\n' + src;
+              duplicateName.dependencies = duplicateName.dependencies.concat(getDependencies(src));
+              return;
+          }
+
+          allFiles[filename] =
+              {
+                  filepath: filepath,
+                  filename: filename,
+                  src: src,
+                  dependencies: getDependencies(src)
+              };
+      } catch (err) {
+        throw new Error('Error getting contents and dependencies for ' + filepath + '\n' + err);
       }
-
-      allFiles[filename] =
-      {
-        filepath: filepath,
-        filename: filename,
-        src: src,
-        dependencies: getDependencies(src)
-      };
     });
 
     return allFiles;
@@ -121,62 +127,77 @@ module.exports = function(grunt) {
     // Iterate over all src-dest file pairs.
     this.files.forEach(function(f) {
 
-      // filter file list to only valid files.
-      var filePaths = f.src.filter(filterFilesOnly);
-      var filesHash = getFileContentsAndDependenciesHash(filePaths);
-      var edges = getFileDependencyEdges(filesHash);
-      var sortedFileNames;
-      var fileContents = [];
+      try {
+          // filter file list to only valid files.
+          var filePaths = f.src.filter(filterFilesOnly);
+          var filesHash = getFileContentsAndDependenciesHash(filePaths);
+          var edges = getFileDependencyEdges(filesHash);
+          var sortedFileNames;
+          var fileContents = [];
 
-      try
-      {
-        sortedFileNames = topsort(edges);
+          try {
+              sortedFileNames = topsort(edges);
+          }
+          catch (e) {
+              grunt.log.warn("Unable to resolve dependencies: " + e.toString());
+              // if force, then we're continuing regardless of dependency order
+              sortedFileNames = topsort(edges, {continueOnCircularDependency: true});
+          }
+
+          if (Array.isArray(options.priority)) {
+              var priority = {};
+              options.priority.forEach(function (filename) {
+                  priority[filename] = true;
+              });
+
+              var priorityNames = sortedFileNames.filter(function (filename) {
+                  return priority[filename];
+              });
+              sortedFileNames = priorityNames.concat(sortedFileNames.filter(function (filename) {
+                  return !priority[filename];
+              }));
+          }
+
+          sortedFileNames.forEach(function (filename) {
+
+            try {
+                var fileHash = filesHash[filename];
+                if (fileHash == undefined) {
+                  grunt.warn('Skipping referenced file that was not processed: ' + filename);
+                  return;
+                }
+                var src = fileHash.src;
+
+                // Process files as templates if requested.
+                if (typeof options.process === 'function') {
+                    src = options.process(src, fileHash.filepath);
+                } else if (options.process) {
+                    src = grunt.template.process(src, options.process);
+                }
+                // Strip banners if requested.
+                if (options.stripBanners) {
+                    src = comment.stripBanner(src, options.stripBanners);
+                }
+
+                fileContents.push(src);
+            } catch (err) {
+              console.error('ERROR concatenating ' + filename + '\n' + err);
+              throw new Error('Error concatenating ' + filename + '\n' + err);
+            }
+          });
+
+          // Concat banner + specified files + footer.
+          var fullSource = banner + fileContents.join(options.separator) + footer;
+
+          // Write the destination file.
+          grunt.file.write(f.dest, fullSource);
+
+          // Print a success message.
+          grunt.log.writeln('File ' + chalk.cyan(f.dest) + ' created.');
+      } catch (err) {
+        console.error('ERROR processing pair: ', f);
+        throw new Error('Error processing ' + f + '\n' + err);
       }
-      catch(e)
-      {
-        grunt.log.warn("Unable to resolve dependencies: " + e.toString());
-        // if force, then we're continuing regardless of dependency order
-        sortedFileNames = topsort(edges, {continueOnCircularDependency: true});
-      }
-
-      if (Array.isArray(options.priority)) {
-        var priority = {};
-        options.priority.forEach(function(filename) {
-          priority[filename] = true;
-        });
-
-        var priorityNames = sortedFileNames.filter(function(filename) { return priority[filename]; });
-        sortedFileNames = priorityNames.concat(sortedFileNames.filter(function(filename) { return !priority[filename]; }));
-      }
-
-      sortedFileNames.forEach(function(filename) {
-
-        var fileHash = filesHash[filename];
-        var src = fileHash.src;
-
-        // Process files as templates if requested.
-        if (typeof options.process === 'function') {
-          src = options.process(src, fileHash.filepath);
-        } else if (options.process) {
-          src = grunt.template.process(src, options.process);
-        }
-        // Strip banners if requested.
-        if (options.stripBanners) {
-          src = comment.stripBanner(src, options.stripBanners);
-        }
-
-        fileContents.push(src);
-
-      });
-
-      // Concat banner + specified files + footer.
-      var fullSource = banner + fileContents.join(options.separator) + footer;
-
-      // Write the destination file.
-      grunt.file.write(f.dest, fullSource);
-
-      // Print a success message.
-      grunt.log.writeln('File ' + chalk.cyan(f.dest) + ' created.');
     });
   });
 
